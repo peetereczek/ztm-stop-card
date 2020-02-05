@@ -4,7 +4,7 @@ This Lovelace custom card displays Warsaw Public Transportation (ZTM) line infor
 This custom card depends on the ZTM - Warsaw public transport sensor that you may find at https://github.com/peetereczek/ztm.
 
 Lovelace UI does not support custom sensor attributes natively, thats why you need to use custom card for pretty output in our UI.
-Inspired by BKK Stop Card (https://github.com/custom-cards/entity-attributes-card) and Entity Attribute Card (https://github.com/custom-cards/entity-attributes-card)
+Inspired by [BKK Stop Card](https://github.com/amaximus/bkk-stop-card) and [Entity Attribute Card](https://github.com/custom-cards/entity-attributes-card)
 
 #### Installation
 The easiest way to install it is through [HACS (Home Assistant Community Store)](https://custom-components.github.io/hacs/),
