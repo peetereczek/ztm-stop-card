@@ -5,3 +5,24 @@ This custom card depends on the ZTM - Warsaw public transport sensor that you ma
 
 Lovelace UI does not support custom sensor attributes natively, thats why you need to use custom card for pretty output in our UI.
 Inspired by BKK Stop Card (https://github.com/custom-cards/entity-attributes-card) and Entity Attribute Card (https://github.com/custom-cards/entity-attributes-card)
+
+#### Installation
+The easiest way to install it is through [HACS (Home Assistant Community Store)](https://custom-components.github.io/hacs/),
+search for <i>ztm</i> and select ZTM Stop Card from Plugins.<br />
+If you are not using HACS, you may download ztm-stop-card.js and put it into $homeassistant_config_dir/www.<br />
+
+#### Lovelace UI configuration
+Add the following lines to your ui-lovelace.yaml (entity should be the sensor of ztp platform you defined):
+```
+resources:
+  - {type: module, url: '/www/community/ztm-stop-card/ztm-stop-card.js'}
+
+    cards:
+      - type: custom:ztm-stop-card
+        entity: sensor.ztm_...<rest of sensor name>
+      - type: custom:bkk-stop-card
+        entity: sensor.ztm_ ...<rest of sensor name>
+```
+
+Lovelace UI:<br />
+![ztm_stop_card](ztm_card.jpg)
