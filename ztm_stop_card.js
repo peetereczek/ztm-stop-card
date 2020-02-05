@@ -16,6 +16,120 @@ class ZTMStopCard extends HTMLElement {
     var routeobjarray = [];
     var station; //stop, station name
     var items; //counter in array
+    
+    function _filterName(stateObj, pattern) {
+      let parts;
+      let attr_id;
+      let attribute;
+
+      if (typeof (pattern) === "object") {
+        parts = pattern["key"].split(".");
+        attribute = pattern["key"];
+      } else {
+        parts = pattern.split(".");
+        attribute = pattern;
+      }
+      attr_id = parts[2];
+
+      if (attr_id.indexOf('*') === -1) {
+        return stateObj == attribute;
+      }
+      const regEx = new RegExp(`^${attribute.replace(/\*/g, '.*')}$`, 'i');
+      return stateObj.search(regEx) === 0;
+    }
+    
+    var supportedItems = 8;
+    var filters1 = new Array();
+    for (var k=0; k < supportedItems; k++) {
+      filters1[k*6+0] = {key: "sensor." + filter1 + ".routeid" + k};
+      filters1[k*6+1] = {key: "sensor."+ filter1 + ".type" + k};
+      filters1[k*6+2] = {key: "sensor."+ filter1 + ".headsign" + k};
+      filters1[k*6+3] = {key: "sensor."+ filter1 + ".in" + k};
+    }
+    filters1[supportedItems*6] = {key: "sensor." + filter1 + ".stationName"};
+    filters1[supportedItems*6+1] = {key: "sensor." + filter1 + ".items"};
+    
+    const attributes = new Map();
+    filters1.forEach((filter) => {
+      const filters = [];
+
+      filters.push(stateObj => _filterName(stateObj, filter));
+
+      Object.keys(hass.states).sort().forEach(key => {
+        Object.keys(hass.states[key].attributes).sort().forEach(attr_key => {
+          if (filters.every(filterFunc => filterFunc(`${key}.${attr_key}`))) {
+            attributes.set(`${key}.${attr_key}`, {
+              value: `${hass.states[key].attributes[attr_key]} ${filter.unit||''}`.trim(),
+            });
+          }  
+        });
+      });
+    });
+
+    var attr = Array.from(attributes.keys());
+    var re = /\d$/;
+    attr.forEach(key => {
+      var newkey = key.split('.')[2];
+
+      if ( re.test(newkey) ) {
+        var idx = newkey[newkey.length - 1];
+        var name = newkey.slice(0, -1);
+        switch (name) {
+          case 'in':
+            inmin[idx]=attributes.get(key).value;
+            break;
+          case 'routeid':
+            routeid[idx]=attributes.get(key).value;
+            break;
+          case 'type':
+            vehicle[idx]=attributes.get(key).value.toLowerCase();
+            icon[idx]=attributes.get(key).value.toLowerCase();
+            if (attributes.get(key).value.toLowerCase() == "trolleybus") {
+              icon[idx]="bus"
+            } else if (attributes.get(key).value.toLowerCase() == "rail") {
+              icon[idx]="train"
+            }
+            break;
+          case 'headsign':
+            headsign[idx]=attributes.get(key).value;
+            break;
+        }
+      } else if ( newkey == "stationName") {
+        station = attributes.get(key).value;
+      } else if ( newkey == "items") {
+        items = attributes.get(key).value;
+      }
+    });
+    if ( items > 0 ) {
+      for (var i=0; i < items; i++) {
+        if ( routeid[i] ) {
+          if ( typeof wheelchair[i] == 'undefined' ) {
+            wheelchair[i] = '';
+          }
+          if ( typeof bikes[i] == 'undefined' ) {
+            bikes[i] = '';
+          }
+          routeobjarray.push({
+            key: routeid[i],
+            vehicle: vehicle[i],
+            inmin: inmin[i],
+            headsign: headsign[i],
+            icon: icon[i],
+            station:station
+          });
+        }
+      }
+    } else {
+      routeobjarray.push({
+        key: 'No service',
+        vehicle: '',
+        inmin: 'following',
+        headsign: 'any destination',
+        icon: '',
+        station: station
+      }); 
+    }
+    return Array.from(routeobjarray.values());
   }
   
   setConfig(config) {
