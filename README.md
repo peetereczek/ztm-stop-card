@@ -12,7 +12,7 @@ search for <i>ztm</i> and select ZTM Stop Card from Plugins.<br />
 If you are not using HACS, you may download ztm_stop_card.js and put it into $homeassistant_config_dir/www.<br />
 
 #### Lovelace UI configuration
-Add the following lines to your ui-lovelace.yaml (entity should be the sensor of ztp platform you defined):
+Add the following lines to your ui-lovelace.yaml (entity should be the sensor of ztm platform you defined):
 ```
 resources:
   - {type: module, url: '/www/community/ztm_stop_card/ztm_stop_card.js'}
