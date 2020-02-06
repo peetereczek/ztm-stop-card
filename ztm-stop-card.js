@@ -40,14 +40,8 @@ class ZTMStopCard extends HTMLElement {
     
     var supportedItems = 8;
     var filters1 = new Array();
-    for (var k=0; k < supportedItems; k++) {
-      filters1[k*6+0] = {key: "sensor." + filter1 + ".routeid" + k};
-      filters1[k*6+1] = {key: "sensor."+ filter1 + ".type" + k};
-      filters1[k*6+2] = {key: "sensor."+ filter1 + ".headsign" + k};
-      filters1[k*6+3] = {key: "sensor."+ filter1 + ".in" + k};
-    }
-    filters1[supportedItems*6] = {key: "sensor." + filter1 + ".stationName"};
-    filters1[supportedItems*6+1] = {key: "sensor." + filter1 + ".items"};
+      filters1[1] = {key: "sensor."+ filter1 + ".direction"};
+      filters1[2] = {key: "sensor."+ filter1 + ".departures"};
     
     const attributes = new Map();
     filters1.forEach((filter) => {
@@ -70,54 +64,44 @@ class ZTMStopCard extends HTMLElement {
     var re = /\d$/;
     attr.forEach(key => {
       var newkey = key.split('.')[2];
-
-      if ( re.test(newkey) ) {
-        var idx = newkey[newkey.length - 1];
-        var name = newkey.slice(0, -1);
-        switch (name) {
-          case 'in':
-            inmin[idx]=attributes.get(key).value;
-            break;
-          case 'routeid':
-            routeid[idx]=attributes.get(key).value;
+		
+        switch (newkey) {
+          case 'departures':
+            inmin=attributes.get(key).value.split(",");
             break;
           case 'type':
-            vehicle[idx]=attributes.get(key).value.toLowerCase();
-            icon[idx]=attributes.get(key).value.toLowerCase();
+            vehicle=attributes.get(key).value.toLowerCase();
+            icon=attributes.get(key).value.toLowerCase();
             if (attributes.get(key).value.toLowerCase() == "trolleybus") {
-              icon[idx]="bus"
+              icon="bus"
             } else if (attributes.get(key).value.toLowerCase() == "rail") {
-              icon[idx]="train"
+              icon="train"
             }
             break;
-          case 'headsign':
-            headsign[idx]=attributes.get(key).value;
+          case 'direction':
+            headsign=attributes.get(key).value.split(",");
             break;
         }
-      } else if ( newkey == "stationName") {
-        station = attributes.get(key).value;
-      } else if ( newkey == "items") {
-        items = attributes.get(key).value;
-      }
+		items = attributes.get(key).value.split(",").length;
+		routeid = key.split("_")[1];
+		if (routeid.length == 3) {
+			vehicle = "bus";
+			icon="bus";
+		} else {
+			vehicle = "tram";
+			icon="tram";
+		}
     });
     if ( items > 0 ) {
       for (var i=0; i < items; i++) {
-        if ( routeid[i] ) {
-          if ( typeof wheelchair[i] == 'undefined' ) {
-            wheelchair[i] = '';
-          }
-          if ( typeof bikes[i] == 'undefined' ) {
-            bikes[i] = '';
-          }
           routeobjarray.push({
-            key: routeid[i],
-            vehicle: vehicle[i],
+            key: routeid.toUpperCase(),
+            vehicle: vehicle,
             inmin: inmin[i],
             headsign: headsign[i],
-            icon: icon[i],
-            station:station
+            icon: icon,
+            station: station
           });
-        }
       }
     } else {
       routeobjarray.push({
@@ -216,7 +200,7 @@ class ZTMStopCard extends HTMLElement {
       ${attributes.map((attribute) => `
         <tr>
           <td class="${attribute.vehicle}"><iron-icon icon="mdi:${attribute.icon}"></td>
-          <td><span class="emp">${attribute.key}</span> to ${attribute.headsign} in ${attribute.inmin} mins</td>
+          <td><span class="emp">${attribute.key}</span> w kierunku ${attribute.headsign} za ${attribute.inmin} min</td>
         </tr>
       `).join('')}
     `;
