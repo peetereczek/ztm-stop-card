@@ -40,8 +40,9 @@ class ZTMStopCard extends HTMLElement {
     
     var supportedItems = 8;
     var filters1 = new Array();
-      filters1[1] = {key: "sensor."+ filter1 + ".direction"};
+      filters1[3] = {key: "sensor."+ filter1 + ".direction"};
       filters1[2] = {key: "sensor."+ filter1 + ".departures"};
+	  filters1[1] = {key: "sensor."+ filter1 + ".friendly_name"};
     
     const attributes = new Map();
     filters1.forEach((filter) => {
@@ -69,17 +70,11 @@ class ZTMStopCard extends HTMLElement {
           case 'departures':
             inmin=attributes.get(key).value.split(",");
             break;
-          case 'type':
-            vehicle=attributes.get(key).value.toLowerCase();
-            icon=attributes.get(key).value.toLowerCase();
-            if (attributes.get(key).value.toLowerCase() == "trolleybus") {
-              icon="bus"
-            } else if (attributes.get(key).value.toLowerCase() == "rail") {
-              icon="train"
-            }
-            break;
           case 'direction':
             headsign=attributes.get(key).value.split(",");
+            break;
+		  case 'friendly_name':
+            station=attributes.get(key).value;
             break;
         }
 		items = attributes.get(key).value.split(",").length;
