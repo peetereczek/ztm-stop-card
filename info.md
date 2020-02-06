@@ -25,4 +25,4 @@ resources:
 ```
 
 Lovelace UI:<br />
-![ztm_stop_card](ztm_card.jpg)
+![ztm_stop_card](ztm-stop-card.jpg)
