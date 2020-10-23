@@ -194,7 +194,7 @@ class ZTMStopCard extends HTMLElement {
     element.innerHTML = `
       ${attributes.map((attribute) => `
         <tr>
-          <td class="${attribute.vehicle}"><iron-icon icon="mdi:${attribute.icon}"></td>
+          <td class="${attribute.vehicle}"><ha-icon icon="mdi:${attribute.icon}"></td>
           <td><span class="emp">${attribute.key}</span> w kierunku ${attribute.headsign} za ${attribute.inmin} min</td>
         </tr>
       `).join('')}
