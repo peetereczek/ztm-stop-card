@@ -130,8 +130,8 @@ class ZTMStopCard extends HTMLElement {
         padding-top:15px;
       }
       table {
-        width: 100%;
-        padding: 0px 36px 16px 0px;
+        width: 90%;
+        padding: 0px 0px 16px 0px;
         border: none;
         margin-left: 16px;
         margin-right: 16px;
