@@ -18,9 +18,9 @@ resources:
   - {type: module, url: '/www/community/ztm_stop_card/ztm_stop_card.js'}
 
     cards:
-      - type: custom:ztm_stop_card
+      - type: custom:ztm-stop-card
         entity: sensor.ztm_...<rest of sensor name>
-      - type: custom:bkk-stop-card
+      - type: custom:ztm-stop-card
         entity: sensor.ztm_ ...<rest of sensor name>
 ```
 
