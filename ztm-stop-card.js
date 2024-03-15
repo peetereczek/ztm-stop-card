@@ -112,7 +112,7 @@ class ZTMStopCard extends HTMLElement {
       }
     } else {
       routeobjarray.push({
-        key: 'Brak lini',
+        key: 'Brak linii',
         vehicle: '',
         inmin: '',
         headsign: 'w kierunku',
