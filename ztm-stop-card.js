@@ -5,7 +5,7 @@ class ZTMStopCard extends HTMLElement {
     this.attachShadow({ mode: 'open' });
   }
   
-  version() { return "0.2.0"; }
+  version() { return "0.1.0"; }
   
   _getAttributes(hass, filter1) {
     var inmin = new Array(); //time delta
@@ -42,7 +42,7 @@ class ZTMStopCard extends HTMLElement {
     var filters1 = new Array();
       filters1[3] = {key: "sensor."+ filter1 + ".direction"};
       filters1[2] = {key: "sensor."+ filter1 + ".departures"};
-      filters1[1] = {key: "sensor."+ filter1 + ".friendly_name"};
+	  filters1[1] = {key: "sensor."+ filter1 + ".friendly_name"};
     
     const attributes = new Map();
     filters1.forEach((filter) => {
@@ -73,33 +73,30 @@ class ZTMStopCard extends HTMLElement {
           case 'direction':
             headsign=attributes.get(key).value.split(",");
             break;
-          case 'friendly_name':
+		  case 'friendly_name':
             station=attributes.get(key).value;
             break;
         }
       items = attributes.get(key).value.split(",").length;
       routeid = key.split("_")[1];
-      if (routeid.match(/^\d{2}$/)) {
+      if (/^\d{2}$/.test(routeid)) {
         vehicle = "tram";
         icon="tram";
-      } else if (routeid.match(/^\d{3}$/)) {
+      } else if (/^\d{3}$/.test(routeid)) {
         vehicle = "bus";
         icon="bus";
-      } else if (routeid.match(/^N{1}-{0,1}(\d{2})$/)) {
+      } else if (/^n{1}-{0,1}(\d{2})$/.test(routeid)) {
         vehicle = "bus";
         icon="bus";
-      } else if (routeid.match(/^L{1}-{0,1}(\d{1,2})$/)) {
+      } else if (/^l{1}-{0,1}(\d{1,2})$/.test(routeid)) {
         vehicle = "bus";
         icon="bus";
-      } else if (routeid.match(/^S{1}\d{1,2}$/)) {
+      } else if (/^s{1}\d{1,2}$/.test(routeid)) {
         vehicle = "rail";
         icon="train";
-      } else if (routeid.match(/^M{1}\d{1}$/)) {
+      } else if (/^m{1}\d{1}$/.test(routeid)) {
         vehicle = "subway";
         icon="train-variant";
-      } else {
-        vehicle = "tram";
-        icon="tram";
       }
     });
     if ( items > 0 ) {
@@ -115,10 +112,10 @@ class ZTMStopCard extends HTMLElement {
       }
     } else {
       routeobjarray.push({
-        key: 'No service',
+        key: 'Brak lini',
         vehicle: '',
-        inmin: 'following',
-        headsign: 'any destination',
+        inmin: '',
+        headsign: 'w kierunku',
         icon: '',
         station: station
       }); 
