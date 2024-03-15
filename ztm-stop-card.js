@@ -42,7 +42,7 @@ class ZTMStopCard extends HTMLElement {
     var filters1 = new Array();
       filters1[3] = {key: "sensor."+ filter1 + ".direction"};
       filters1[2] = {key: "sensor."+ filter1 + ".departures"};
-	  filters1[1] = {key: "sensor."+ filter1 + ".friendly_name"};
+      filters1[1] = {key: "sensor."+ filter1 + ".friendly_name"};
     
     const attributes = new Map();
     filters1.forEach((filter) => {
@@ -73,19 +73,34 @@ class ZTMStopCard extends HTMLElement {
           case 'direction':
             headsign=attributes.get(key).value.split(",");
             break;
-		  case 'friendly_name':
+          case 'friendly_name':
             station=attributes.get(key).value;
             break;
         }
-		items = attributes.get(key).value.split(",").length;
-		routeid = key.split("_")[1];
-		if (routeid.length == 3) {
-			vehicle = "bus";
-			icon="bus";
-		} else {
-			vehicle = "tram";
-			icon="tram";
-		}
+      items = attributes.get(key).value.split(",").length;
+      routeid = key.split("_")[1];
+      if (routeid.match(/^\d{2}$/)) {
+        vehicle = "tram";
+        icon="tram";
+      } else if (routeid.match(/^\d{3}$/)) {
+        vehicle = "bus";
+        icon="bus";
+      } else if (routeid.match(/^N{1}-{0,1}(\d{2})$/)) {
+        vehicle = "bus";
+        icon="bus";
+      } else if (routeid.match(/^L{1}-{0,1}(\d{1,2})$/)) {
+        vehicle = "bus";
+        icon="bus";
+      } else if (routeid.match(/^S{1}\d{1,2}$/)) {
+        vehicle = "rail";
+        icon="train";
+      } else if (routeid.match(/^M{1}\d{1}$/)) {
+        vehicle = "subway";
+        icon="train-variant";
+      } else {
+        vehicle = "tram";
+        icon="tram";
+      }
     });
     if ( items > 0 ) {
       for (var i=0; i < items; i++) {
